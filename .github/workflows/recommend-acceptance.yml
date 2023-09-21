@@ -34,6 +34,7 @@ jobs:
           branch: ${{ github.event.inputs.branch }}
           issue_id: ${{ github.event.inputs.issue_id }}
           journal: resciencec
+          journal_template: resciencec
           compile_mode: accepted
       - name: Upload files to papers repo
         id: upload-files
