@@ -33,14 +33,15 @@ jobs:
           repository_url: ${{ github.event.inputs.repository_url }}
           branch: ${{ github.event.inputs.branch }}
           issue_id: ${{ github.event.inputs.issue_id }}
-          journal: joss
+          journal: resciencec
+          journal_template: resciencec
           compile_mode: accepted
       - name: Upload files to papers repo
         id: upload-files
         uses: xuanxu/upload-files-action@main
         with:
-          papers_repo: openjournals/joss-papers
-          branch_prefix: joss
+          papers_repo: ReScience/ReScienceC-papers
+          branch_prefix: resciencec
           issue_id: ${{ github.event.inputs.issue_id }}
           pdf_path: ${{ steps.generate-files.outputs.pdf_path}}
           jats_path: ${{ steps.generate-files.outputs.jats_path}}
@@ -56,9 +57,8 @@ jobs:
         id: pull-request
         uses: xuanxu/deposit-pull-request-action@main
         with:
-          papers_repo: openjournals/joss-papers
-          papers_repo_main_branch: master
-          branch_prefix: joss
+          papers_repo: ReScience/ReScienceC-papers
+          branch_prefix: resciencec
           issue_id: ${{ github.event.inputs.issue_id }}
           bot_token: ${{ secrets.BOT_TOKEN }}
           mode: deposit
@@ -68,12 +68,12 @@ jobs:
           crossref_filepath: ${{ steps.generate-files.outputs.crossref_path}}
           crossref_username: ${{ secrets.CROSSREF_USERNAME }}
           crossref_password: ${{ secrets.CROSSREF_PASSWORD }}
-      - name: Deposit with JOSS
+      - name: Deposit with Open Journals
         id: oj-deposit
         uses: xuanxu/deposit-with-openjournals-action@main
         with:
-          journal_alias: joss
-          journal_secret: ${{ secrets.JOSS_SECRET }}
+          journal_alias: resciencec
+          journal_secret: ${{ secrets.RESCIENCEC_SECRET }}
           issue_id: ${{ github.event.inputs.issue_id }}
           paper_path: ${{ steps.generate-files.outputs.paper_file_path}}
       - name: Citation.cff file info
@@ -81,12 +81,12 @@ jobs:
         with:
           citation_file_path: ${{ steps.generate-files.outputs.citation_file_path}}
           issue_id: ${{ github.event.inputs.issue_id }}
-          reviews_repo: openjournals/joss-reviews
+          reviews_repo: ReScience/ReScienceC-reviews
           gh_token: ${{ secrets.BOT_TOKEN }}
       - name: Post to social media
         uses: xuanxu/acceptance-tweet-action@main
         with:
-          journal_name: "JOSS"
+          journal_name: "ReScience C"
           paper_title: ${{ steps.generate-files.outputs.paper_title}}
           paper_doi: ${{steps.oj-deposit.outputs.paper_doi}}
           twitter_consumer_key: ${{ secrets.TWITTER_CONSUMER_KEY }}
@@ -96,13 +96,13 @@ jobs:
           mastodon_access_token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           mastodon_instance_url: ${{ secrets.MASTODON_INSTANCE_URL }}
           mastodon_user: ${{ secrets.MASTODON_USER }}
-          reviews_repo: openjournals/joss-reviews
+          reviews_repo: ReScience/ReScienceC-reviews
           issue_id: ${{ github.event.inputs.issue_id }}
           gh_token: ${{ secrets.BOT_TOKEN }}
       - name: Reply message
         if: ${{ success() }}
         run: |
-          gh issue comment ${{ github.event.inputs.issue_id }} --body "🚨🚨🚨 **THIS IS NOT A DRILL, YOU HAVE JUST ACCEPTED A PAPER INTO JOSS!** 🚨🚨🚨
+          gh issue comment ${{ github.event.inputs.issue_id }} --body "🚨🚨🚨 **THIS IS NOT A DRILL, YOU HAVE JUST ACCEPTED A PAPER INTO ReSCIENCE C!** 🚨🚨🚨
 
           Here's what you must now do:
 
